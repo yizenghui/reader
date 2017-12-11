@@ -1,0 +1,33 @@
+{{define "list"}}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <title>{{ .Title }}</title>
+        <!-- 引入 WeUI -->
+        <link rel="stylesheet" href="//res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css"/>
+    </head>
+    <body>
+        <!-- 使用 -->
+    {{ if .Links }}
+        <div class="weui-cells__title">目录</div>
+        <div class="weui-cells">
+            {{ range .Links }}
+            <a class="weui-cell weui-cell_access" href="/show?url={{.URL}}">
+                <div class="weui-cell__bd">
+                    <p>{{ .Title }}</p>
+                </div>
+                <div class="weui-cell__ft">
+                </div>
+            </a>
+            {{ end }}
+        </div>
+    {{ else }}
+    
+    <div class="weui-cells__title">获取不到链接列表</div>
+    {{ end }}
+        
+    </body>
+</html>
+{{end}}
