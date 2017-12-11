@@ -22,8 +22,39 @@ type Link struct {
 	URL   string `json:"url"`
 }
 
-// GetList 读url中的正文 解释返回 markdown 格式正文
+// GetList 获取列表，过滤零散的链接 (适用小说类)
 func GetList(urlStr string) (data Data, err error) {
+
+	g, e := goquery.NewDocument(urlStr)
+	if e != nil {
+		return data, e
+	}
+
+	data.Title = g.Find("title").Text()
+
+	link, _ := url.Parse(urlStr)
+
+	// fmt.Println(g.Text())
+	g.Find("a").Each(func(i int, content *goquery.Selection) {
+		// 书名
+		n := strings.TrimSpace(content.Text())
+		u, _ := content.Attr("href")
+		if strings.Index(u, "/") == 0 && strings.Index(u, "//") != 0 {
+			u = fmt.Sprintf(`%v://%v%v`, link.Scheme, link.Host, u)
+		}
+		data.Links = append(data.Links, Link{
+			n,
+			u,
+		})
+	})
+	// fmt.Println(data)
+	data.Links = Cleaning(data.Links)
+	return data, nil
+
+}
+
+// GetListByContent 获取正文中的链接
+func GetListByContent(urlStr string) (data Data, err error) {
 	a2, _ := GetContent(urlStr)
 
 	data.Title = a2.Title
@@ -41,7 +72,6 @@ func GetList(urlStr string) (data Data, err error) {
 
 	g, e := goquery.NewDocumentFromReader(c)
 
-	g, e = goquery.NewDocument(urlStr)
 	if e != nil {
 
 	}
@@ -60,13 +90,12 @@ func GetList(urlStr string) (data Data, err error) {
 			u,
 		})
 	})
-
 	return data, nil
 
 }
 
 //Cleaning 清洗数据
-func Cleaning(links []Link) map[string]int {
+func Cleaning(links []Link) (newlinks []Link) {
 	// 拆分链接
 	var edu = map[string]int{}
 	for _, link := range links {
@@ -104,7 +133,12 @@ func Cleaning(links []Link) map[string]int {
 		// wg[link.URL] = w
 	}
 
-	return wg
+	for _, link := range links {
+		if _, ok := wg[link.URL]; ok && link.Title != "" {
+			newlinks = append(newlinks, link)
+		}
+	}
+	return newlinks
 }
 
 //GetTag 获取特点

@@ -2,7 +2,6 @@ package reader
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/sundy-li/html2article"
 )
@@ -35,7 +34,7 @@ func GetContent(url string) (info Info, err error) {
 	if err != nil {
 		return info, err
 	}
-	fmt.Println(article)
+	// fmt.Println(article)
 
 	//parse the article to be readability
 	article.Readable(url)
