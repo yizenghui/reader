@@ -136,6 +136,7 @@ func main() {
 	e.GET("/list", GetList)
 	e.GET("/show", GetContent)
 
+	e.File("favicon.ico", "favicon.ico")
 	e.Logger.Fatal(e.Start(":8007"))
 
 }
