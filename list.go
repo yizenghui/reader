@@ -25,6 +25,15 @@ type Link struct {
 	URL   string `json:"url"`
 }
 
+var exp = []string{
+	`?`,
+	`&`,
+	`#`,
+	`/`,
+	`=`,
+	// `.`, // 不能把这个点去掉
+}
+
 // GetList 获取列表，过滤零散的链接 (适用小说类)
 func GetList(urlStr string) (data Data, err error) {
 
@@ -48,23 +57,40 @@ func GetList(urlStr string) (data Data, err error) {
 
 	link, _ := url.Parse(urlStr)
 
+	var links []Link
 	// fmt.Println(g.Text())
 	g.Find("a").Each(func(i int, content *goquery.Selection) {
 		// 书名
 		n := strings.TrimSpace(content.Text())
 		u, _ := content.Attr("href")
-		if strings.Index(u, "/") == 0 && strings.Index(u, "//") != 0 {
-			u = fmt.Sprintf(`%v://%v%v`, link.Scheme, link.Host, u)
-		} else if strings.Index(u, "/") != 0 && strings.Index(u, "//") != 0 && strings.Index(u, "http") != 0 {
-			u = fmt.Sprintf(`%v://%v%v%v`, link.Scheme, link.Host, link.Path, u)
+
+		if strings.Index(u, "java") != 0 {
+			if strings.Index(u, "/") == 0 && strings.Index(u, "//") != 0 {
+				u = fmt.Sprintf(`%v://%v%v`, link.Scheme, link.Host, u)
+			} else if strings.Index(u, "/") != 0 && strings.Index(u, "//") != 0 && strings.Index(u, "#") != 0 && strings.Index(u, "http") != 0 {
+				u = fmt.Sprintf(`%v://%v%v%v`, link.Scheme, link.Host, link.Path, u)
+			}
+			links = append(links, Link{
+				n,
+				u,
+			})
 		}
-		data.Links = append(data.Links, Link{
-			n,
-			u,
-		})
 	})
 	// fmt.Println(data)
-	data.Links = Cleaning(data.Links)
+	data.Links = Cleaning(links)
+
+	if len(data.Links) < 20 { // 这里面是兼容处理，如果
+		exp = []string{
+			`?`,
+			`&`,
+			`#`,
+			`/`,
+			`=`,
+			`.`, // 不能把这个点去掉
+		}
+		data.Links = Cleaning(links)
+	}
+
 	return data, nil
 
 }
@@ -159,14 +185,6 @@ func Cleaning(links []Link) (newlinks []Link) {
 
 //GetTag 获取特点
 func GetTag(urlStr string) string {
-	var exp = []string{
-		`?`,
-		`&`,
-		`#`,
-		`/`,
-		`=`,
-		`.`,
-	}
 
 	link, _ := url.Parse(urlStr)
 	for _, t := range exp {
