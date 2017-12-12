@@ -4,91 +4,46 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-        <title>Rf正文阅读器</title>
+        <title>reader.readfollow.com</title>
         <!-- 引入 WeUI -->
         <link rel="stylesheet" href="//res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css"/>
     </head>
     <body>
-        <!-- 使用 -->
-
-   
 		<div class="page">
 
 
+        <!-- 使用 -->
+        <div style="    padding: 40px;
+        background-color: #fff;
+         margin-top: 0; 
+        position: relative;
+        overflow: hidden;">
+            <h1 class="page__title">
+                无广告阅读工具
+            </h1>
+            <p style="    margin-top: 5px;
+            color: #888;
+            text-align: left;
+            font-size: 14px;">
+                抓取目录链接，对目标正文进行转码阅读，清除烦恼广告解决方案！
+            </p>
+        </div>
+   
         
 
     <div class="page__bd">
-        <!--<a href="javascript:;" class="weui-btn weui-btn_primary">点击展现searchBar</a>-->
-        <div class="weui-search-bar" id="searchBar">
+        <div class="weui-search-bar weui-search-bar_focusing" id="searchBar">
             <form class="weui-search-bar__form" action="/list">
                 <div class="weui-search-bar__box">
-                    <i class="weui-icon-search"></i>
-                    <input type="search" name="url" class="weui-search-bar__input" id="searchInput" placeholder="文章目录" required autocomplete="off"/>
-                    <a href="javascript:" class="weui-icon-clear" id="searchClear"></a>
+                    <input type="search" name="url" class="weui-search-bar__input" id="searchInput" placeholder="请粘贴文章目录链接地址，并提交" required autocomplete="off"/>
                 </div>
-                <label class="weui-search-bar__label" id="searchText">
-                    <i class="weui-icon-search"></i>
-                    <span>文章目录</span>
-                </label>
             </form>
-            <a href="javascript:" class="weui-search-bar__cancel-btn" id="searchCancel">取消</a>
 
         </div>
     </div>
 
 </div>
 
-    <script src="http://zeptojs.com/zepto.min.js"></script>
-    <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-    <script src="https://res.wx.qq.com/open/libs/weuijs/1.0.0/weui.min.js"></script>
-
-<script type="text/javascript">
-    $(function(){
-        var $searchBar = $('#searchBar'),
-            $searchResult = $('#searchResult'),
-            $searchText = $('#searchText'),
-            $searchInput = $('#searchInput'),
-            $searchClear = $('#searchClear'),
-            $searchCancel = $('#searchCancel');
-
-        function hideSearchResult(){
-            $searchResult.hide();
-            $searchInput.val('');
-        }
-        function cancelSearch(){
-            hideSearchResult();
-            $searchBar.removeClass('weui-search-bar_focusing');
-            $searchText.show();
-        }
-
-        $searchText.on('click', function(){
-            $searchBar.addClass('weui-search-bar_focusing');
-            $searchInput.focus();
-        });
-        $searchInput
-            .on('blur', function () {
-                if(!this.value.length) cancelSearch();
-            })
-            .on('input', function(){
-                if(this.value.length) {
-                    // 暂时未支持
-                    // $searchResult.show();
-                } else {
-                    $searchResult.hide();
-                }
-            })
-        ;
-        $searchClear.on('click', function(){
-            hideSearchResult();
-            $searchInput.focus();
-        });
-        $searchCancel.on('click', function(){
-            cancelSearch();
-            $searchInput.blur();
-        });
-    });
-</script>
-		
 		
 		<div class="page__bd page__bd_spacing">
 			<br>

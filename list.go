@@ -2,10 +2,13 @@ package reader
 
 import (
 	"fmt"
+	"io/ioutil"
+	"net/http"
 	"net/url"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/sundy-li/html2article"
 )
 
 // Data 链接
@@ -25,7 +28,18 @@ type Link struct {
 // GetList 获取列表，过滤零散的链接 (适用小说类)
 func GetList(urlStr string) (data Data, err error) {
 
-	g, e := goquery.NewDocument(urlStr)
+	resp, err := http.Get(urlStr)
+	if err != nil {
+		return
+	}
+	defer resp.Body.Close()
+	bs, _ := ioutil.ReadAll(resp.Body)
+	htmlStr := string(bs)
+	htmlStr = html2article.DecodeHtml(resp.Header, htmlStr, htmlStr)
+
+	g, e := goquery.NewDocumentFromReader(strings.NewReader(htmlStr))
+
+	// g, e := goquery.NewDocument(urlStr)
 	if e != nil {
 		return data, e
 	}
@@ -41,6 +55,8 @@ func GetList(urlStr string) (data Data, err error) {
 		u, _ := content.Attr("href")
 		if strings.Index(u, "/") == 0 && strings.Index(u, "//") != 0 {
 			u = fmt.Sprintf(`%v://%v%v`, link.Scheme, link.Host, u)
+		} else if strings.Index(u, "/") != 0 && strings.Index(u, "//") != 0 && strings.Index(u, "http") != 0 {
+			u = fmt.Sprintf(`%v://%v%v%v`, link.Scheme, link.Host, link.Path, u)
 		}
 		data.Links = append(data.Links, Link{
 			n,
@@ -149,6 +165,7 @@ func GetTag(urlStr string) string {
 		`#`,
 		`/`,
 		`=`,
+		`.`,
 	}
 
 	link, _ := url.Parse(urlStr)

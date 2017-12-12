@@ -11,7 +11,7 @@
     <body>
         <!-- 使用 -->
     {{ if .Links }}
-        <div class="weui-cells__title">目录</div>
+        <div class="weui-cells__title" id="top">目录</div>
         <div class="weui-cells">
             {{ range .Links }}
             <a class="weui-cell weui-cell_access" href="/show?url={{.URL}}">
@@ -23,6 +23,40 @@
             </a>
             {{ end }}
         </div>
+        <div id="bottom">
+            <div class="page__bd page__bd_spacing">
+                <br>
+                <div class="weui-footer">
+                    <p class="weui-footer__text">个人作品，清算零散链接，仅供测试使用</p>
+                    <p class="weui-footer__text">使用本工具所展现内容，版权归原网站所有</p>
+                    <p class="weui-footer__text"></p>
+                </div>
+                <br>
+            </div>
+        </div>
+        <div style="width: 30px;
+    height: 30px;
+    line-height: 30px;
+    right: 10px;
+    z-index: 10;
+    position: fixed;
+    cursor: pointer;
+    bottom: 50px;">
+    <a href="#top" rel="nofollow">
+        <svg class="icon" width="30px" height="30.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path fill="#cecece" d="M509.927514 387.159081C517.168621 379.168894 527.507586 379.262447 534.709532 387.493244L805.278364 696.714765C813.036915 705.581679 826.514517 706.480186 835.381431 698.721636 844.248346 690.963085 845.146852 677.485483 837.388303 668.618569L566.819471 359.397045C542.819471 331.968474 502.692194 331.60538 478.31207 358.507586L197.525612 668.340919C189.61372 677.071283 190.277222 690.562496 199.007586 698.474389 207.737949 706.386281 221.229163 705.722778 229.141056 696.992414L509.927514 387.159081Z" /></svg>
+    </a></div>
+    
+    <div style="width: 30px;
+    height: 30px;
+    line-height: 30px;
+    right: 10px;
+    z-index: 10;
+    position: fixed;
+    cursor: pointer;
+    bottom: 20px;">
+    <a href="#bottom" rel="nofollow">
+        <svg class="icon" width="30px" height="30.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path fill="#cecece" d="M478.31207 644.159081C502.692194 671.061286 542.819471 670.698193 566.819471 643.269621L837.388303 334.048098C845.146852 325.181184 844.248346 311.703582 835.381431 303.94503 826.514517 296.186481 813.036915 297.084988 805.278364 305.951902L534.709532 615.173423C527.507586 623.40422 517.168621 623.497773 509.927514 615.507586L229.141056 305.674253C221.229163 296.943889 207.737949 296.280386 199.007586 304.192277 190.277222 312.104171 189.61372 325.595383 197.525612 334.325747L478.31207 644.159081Z" /></svg>  
+    </a></div>
     {{ else }}
     
     <div class="weui-cells__title">获取不到链接列表</div>
