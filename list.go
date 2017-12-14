@@ -65,9 +65,11 @@ func GetList(urlStr string) (data Data, err error) {
 		u, _ := content.Attr("href")
 
 		if strings.Index(u, "java") != 0 {
-			if strings.Index(u, "/") == 0 && strings.Index(u, "//") != 0 {
+			if strings.Index(u, "//") == 0 {
+				u = fmt.Sprintf(`%v:%v`, link.Scheme, u)
+			} else if strings.Index(u, "/") == 0 {
 				u = fmt.Sprintf(`%v://%v%v`, link.Scheme, link.Host, u)
-			} else if strings.Index(u, "/") != 0 && strings.Index(u, "//") != 0 && strings.Index(u, "#") != 0 && strings.Index(u, "http") != 0 {
+			} else if strings.Index(u, "#") != 0 && strings.Index(u, "http") != 0 {
 				u = fmt.Sprintf(`%v://%v%v%v`, link.Scheme, link.Host, link.Path, u)
 			}
 			links = append(links, Link{
