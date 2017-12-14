@@ -19,6 +19,15 @@ func Test_Demo(t *testing.T) {
 	t.Fatal(a2)
 
 }
+func Test_Content(t *testing.T) {
+
+	// a1, _ := Read("http://www.76wx.com/book/1563/3212972.html")
+	// fmt.Println(a1)
+
+	a2, _ := Read("http://www.166xs.com/xiaoshuo/84/84625/18347752.html")
+	t.Fatal(a2)
+
+}
 
 func Test_SplitSection(t *testing.T) {
 
