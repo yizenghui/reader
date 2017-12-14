@@ -177,10 +177,15 @@ func Cleaning(links []Link) (newlinks []Link) {
 		// wg[link.URL] = w
 	}
 
+	var crp = map[string]int{}
 	for _, link := range links {
-		if _, ok := wg[link.URL]; ok && link.Title != "" {
-			newlinks = append(newlinks, link)
+		if _, ok := crp[link.URL]; !ok && link.Title != "" {
+			crp[link.URL] = 1
+			if _, ok := wg[link.URL]; ok && link.Title != "" {
+				newlinks = append(newlinks, link)
+			}
 		}
+
 	}
 	return newlinks
 }
