@@ -140,11 +140,11 @@ func GetListByContent(urlStr string) (data Data, err error) {
 
 //Cleaning 清洗数据
 func Cleaning(links []Link) (newlinks []Link) {
-	// 拆分链接
+	// 拆分链接字符占比重
 	var edu = map[string]int{}
-	for _, link := range links {
+	for _, link := range links { //所有链接
 		s := GetTag(link.URL)
-		for _, k := range strings.Split(s, ",") {
+		for _, k := range strings.Split(s, ",") { //链接分拆统计
 			if v, ok := edu[k]; ok && k != "" && k != " " {
 				v++
 				edu[k] = v
@@ -155,12 +155,27 @@ func Cleaning(links []Link) (newlinks []Link) {
 	}
 
 	var mw = 0
-	var pro = 0.3
+	var maxWeight = 0.0
 
 	for _, v := range edu {
 		mw += v
 	}
 
+	// 找出最大重量
+	for _, link := range links {
+		s := GetTag(link.URL)
+		w := 0
+		for _, k := range strings.Split(s, ",") {
+			if v, ok := edu[k]; ok {
+				w += v
+			}
+		}
+		if (float64(w) / float64(mw)) > maxWeight {
+			maxWeight = float64(w) / float64(mw)
+		}
+		// wg[link.URL] = w
+	}
+	var pro = maxWeight * 0.98
 	// 这个链接的重量
 	var wg = map[string]int{}
 	for _, link := range links {

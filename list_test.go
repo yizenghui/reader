@@ -58,7 +58,8 @@ func Test_GetTag(t *testing.T) {
 func Test_Cleaning(t *testing.T) {
 
 	urlStr := `http://www.longfuxiaoshuo.com/`
-	urlStr = `http://www.17k.com/list/2657648.html`
+	// urlStr = `http://www.17k.com/list/2657648.html`
+	// urlStr = `http://www.3dllc.cc/html/86/86244/`
 	g, e := goquery.NewDocument(urlStr)
 	if e != nil {
 
