@@ -72,9 +72,11 @@ func GetBookContent(url string) (info BookInfo, err error) {
 	if len(arr) > 2 {
 		for _, v := range arr {
 			text := strings.TrimSpace(v)
-			info.Content = append(info.Content, BookSection{
-				Text: text,
-			})
+			if text != "" {
+				info.Content = append(info.Content, BookSection{
+					Text: text,
+				})
+			}
 		}
 	}
 	// info.PubAt = Publishtime
