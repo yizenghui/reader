@@ -66,6 +66,7 @@ func GetBookContent(url string) (info BookInfo, err error) {
 	c = strings.Replace(c, `<br/>`, `</p>`, -1)
 	c = strings.Replace(c, `<br />`, `</p>`, -1)
 	c = strings.Replace(c, `<br>`, `</p>`, -1)
+	c = strings.Replace(c, `\n`, `</p>`, -1)
 	// arr := strings.Split(c, "<p>")
 	arr := strings.Split(c, "</p>")
 
