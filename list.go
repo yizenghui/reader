@@ -31,7 +31,7 @@ var exp = []string{
 	`#`,
 	`/`,
 	`=`,
-	// `.`, // 不能把这个点去掉
+	`.`, // 不能把这个点去掉
 }
 
 // GetList 获取列表，过滤零散的链接 (适用小说类)
@@ -88,7 +88,7 @@ func GetList(urlStr string) (data Data, err error) {
 			`#`,
 			`/`,
 			`=`,
-			`.`, // 不能把这个点去掉
+			// `.`, // 不能把这个点去掉
 		}
 		data.Links = Cleaning(links)
 	}
