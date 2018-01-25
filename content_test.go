@@ -8,8 +8,36 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday"
+	"github.com/sundy-li/html2article"
 )
 
+func Test_GetContentBody(t *testing.T) {
+
+	url := "http://www.longfu8.com/246.html"
+	type Article struct {
+		// Basic
+		Title       string `json:"title"`
+		Content     string `json:"content"`
+		Publishtime int64  `json:"publish_time"`
+	}
+
+	ext, err := html2article.NewFromUrl(url)
+	if err != nil {
+	}
+	article, err := ext.ToArticle()
+	if err != nil {
+	}
+	// fmt.Println(article)
+
+	//parse the article to be readability
+	article.Readable(url)
+
+	// fmt.Println(article.Title, article.Publishtime)
+	// md = html2md.Convert(article.ReadContent)
+
+	t.Fatal(article.ReadContent)
+
+}
 func Test_Demo(t *testing.T) {
 
 	// a1, _ := Read("http://www.76wx.com/book/1563/3212972.html")

@@ -1,6 +1,7 @@
 package reader
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -34,8 +35,31 @@ var exp = []string{
 	`.`, // 不能把这个点去掉
 }
 
+//CheckStrIsLink 检查字符串是否支持的链接
+func CheckStrIsLink(urlStr string) error {
+
+	link, err := url.Parse(urlStr)
+
+	if err != nil {
+		return err
+	}
+
+	if link.Scheme == "" {
+		return errors.New("Scheme Fatal")
+	}
+
+	if link.Host == "" {
+		return errors.New("Host Fatal")
+	}
+	return nil
+}
+
 // GetList 获取列表，过滤零散的链接 (适用小说类)
 func GetList(urlStr string) (data Data, err error) {
+	err = CheckStrIsLink(urlStr)
+	if err != nil {
+		return
+	}
 
 	resp, err := http.Get(urlStr)
 	if err != nil {
@@ -209,6 +233,8 @@ func Cleaning(links []Link) (newlinks []Link) {
 func GetTag(urlStr string) string {
 
 	link, _ := url.Parse(urlStr)
+	// todo .htm .html .shtml 转换成非点分割
+	// link.Path =
 	for _, t := range exp {
 		// u := fmt.Sprintf(`%v`, link.Path)
 		link.Path = strings.Replace(link.Path, t, ",", -1)
