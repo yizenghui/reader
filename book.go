@@ -62,6 +62,10 @@ func GetBookContent(url string) (info BookInfo, err error) {
 	c := strings.TrimSpace(fmt.Sprintf(`%v`, string(content[:])))
 
 	c = strings.Replace(c, `<p>`, ``, -1)
+	c = strings.Replace(c, `<code>`, ``, -1)
+	c = strings.Replace(c, `</code>`, ``, -1)
+	c = strings.Replace(c, `<pre>`, ``, -1)
+	c = strings.Replace(c, `</pre>`, ``, -1)
 
 	c = strings.Replace(c, `<br/>`, `</p>`, -1)
 	c = strings.Replace(c, `<br />`, `</p>`, -1)
