@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -32,7 +33,7 @@ var exp = []string{
 	`#`,
 	`/`,
 	`=`,
-	`.`, // 不能把这个点去掉
+	// `.`, // 不能把这个点去掉
 }
 
 //CheckStrIsLink 检查字符串是否支持的链接
@@ -96,6 +97,12 @@ func GetList(urlStr string) (data Data, err error) {
 			} else if strings.Index(u, "#") != 0 && strings.Index(u, "http") != 0 {
 				u = fmt.Sprintf(`%v://%v%v%v`, link.Scheme, link.Host, link.Path, u)
 			}
+			u = strings.Replace(u, " ", "", -1)
+			u = strings.Replace(u, "　", "", -1)
+			// 去除换行符
+			u = strings.Replace(u, "\n", "", -1)
+			u = strings.Replace(u, "\t", "", -1)
+
 			links = append(links, Link{
 				n,
 				u,
@@ -103,6 +110,7 @@ func GetList(urlStr string) (data Data, err error) {
 		}
 	})
 	// fmt.Println(data)
+	// data.Links = links
 	data.Links = Cleaning(links)
 
 	if len(data.Links) < 20 { // 这里面是兼容处理，如果
@@ -112,11 +120,11 @@ func GetList(urlStr string) (data Data, err error) {
 			`#`,
 			`/`,
 			`=`,
-			// `.`, // 不能把这个点去掉
+			`.`, // 不能把这个点去掉
 		}
-		data.Links = Cleaning(links)
+		// data.Links = Cleaning(links)
 	}
-
+	log.Fatal(data.Links)
 	return data, nil
 
 }
@@ -181,7 +189,11 @@ func Cleaning(links []Link) (newlinks []Link) {
 	var mw = 0
 	var maxWeight = 0.0
 
+	// log.Fatal(edu)
 	for _, v := range edu {
+		if v > 10 {
+			v = 10
+		}
 		mw += v
 	}
 
@@ -199,7 +211,7 @@ func Cleaning(links []Link) (newlinks []Link) {
 		}
 		// wg[link.URL] = w
 	}
-	var pro = maxWeight * 0.98
+	var pro = maxWeight * 0.30
 	// 这个链接的重量
 	var wg = map[string]int{}
 	for _, link := range links {
@@ -216,6 +228,7 @@ func Cleaning(links []Link) (newlinks []Link) {
 		// wg[link.URL] = w
 	}
 
+	// log.Fatal(links)
 	var crp = map[string]int{}
 	for _, link := range links {
 		if _, ok := crp[link.URL]; !ok && link.Title != "" {
@@ -232,8 +245,13 @@ func Cleaning(links []Link) (newlinks []Link) {
 //GetTag 获取特点
 func GetTag(urlStr string) string {
 
-	link, _ := url.Parse(urlStr)
 	// todo .htm .html .shtml 转换成非点分割
+	// urlStr = strings.Replace(urlStr, `.html`, `/html`, -1)
+	// urlStr = strings.Replace(urlStr, `.shtml`, `/shtml`, -1)
+	// urlStr = strings.Replace(urlStr, `.htm`, `/htm`, -1)
+
+	link, _ := url.Parse(urlStr)
+
 	// link.Path =
 	for _, t := range exp {
 		// u := fmt.Sprintf(`%v`, link.Path)
