@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -124,7 +123,7 @@ func GetList(urlStr string) (data Data, err error) {
 		}
 		// data.Links = Cleaning(links)
 	}
-	log.Fatal(data.Links)
+	// log.Fatal(data.Links)
 	return data, nil
 
 }
