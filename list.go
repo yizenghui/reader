@@ -3,13 +3,12 @@ package reader
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/sundy-li/html2article"
+	"golang.org/x/net/html/charset"
 )
 
 // Data 链接
@@ -65,14 +64,11 @@ func GetList(urlStr string) (data Data, err error) {
 	if err != nil {
 		return
 	}
+	reader, err := charset.NewReader(resp.Body, strings.ToLower(resp.Header.Get("Content-Type")))
 	defer resp.Body.Close()
-	bs, _ := ioutil.ReadAll(resp.Body)
-	htmlStr := string(bs)
-	htmlStr = html2article.DecodeHtml(resp.Header, htmlStr, htmlStr)
 
-	g, e := goquery.NewDocumentFromReader(strings.NewReader(htmlStr))
+	g, e := goquery.NewDocumentFromReader(reader)
 
-	// g, e := goquery.NewDocument(urlStr)
 	if e != nil {
 		return data, e
 	}
@@ -112,17 +108,18 @@ func GetList(urlStr string) (data Data, err error) {
 	// data.Links = links
 	data.Links = Cleaning(links)
 
-	if len(data.Links) < 20 { // 这里面是兼容处理，如果
-		exp = []string{
-			`?`,
-			`&`,
-			`#`,
-			`/`,
-			`=`,
-			`.`, // 不能把这个点去掉
-		}
-		// data.Links = Cleaning(links)
-	}
+	// if len(data.Links) < 20 { // 这里面是兼容处理，如果
+	// 	exp = []string{
+	// 		`?`,
+	// 		`&`,
+	// 		`#`,
+	// 		`/`,
+	// 		`=`,
+	// 		`.`, // 不能把这个点去掉
+	// 	}
+	// 	// data.Links = Cleaning(links)
+	// }
+
 	// log.Fatal(data.Links)
 	return data, nil
 
